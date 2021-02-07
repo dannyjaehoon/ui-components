@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Stopwatch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro" rel="stylesheet" />
+    <style>
+      body {
+        font-family: 'Source Code Pro', monospace;
+      }
+      .title {
+        color: #db5b33;
+        font-weight: 300;
+        text-align: center;
+      }
+      .stopwatch {
+        text-align: center;
+        font-size: 3em;
+        padding: 30px;
+      }
+      .control {
+        width: 120px;
+        padding: 5px;
+        margin: 15px;
+        font-size: 36px;
+        font-weight: bold;
+        border: 2px solid #f44336;
+        border-radius: 4px;
+        cursor: pointer;
+        outline: none;
+      }
+      .control:hover:enabled {
+        background: #f44336;
+        color: aliceblue;
+      }
+      .control:disabled {
+        color: gray;
+        cursor: not-allowed;
+      }
+      .laps {
+        display: grid;
+        grid-template-columns: 70px 1fr;
+        column-gap: 50px;
+        row-gap: 10px;
+        width: 260px;
+        margin: 10px auto;
+        font-size: 0.5em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="title">Stopwatch</h1>
+    <div class="stopwatch">
+      <div class="display">00:00:00</div>
+      <button class="control">Start</button>
+      <button class="control" disabled>Reset</button>
+      <div class="laps">
+        <div class="lap-title">Laps</div>
+        <div class="lap-title">Time</div>
+        <!-- 아래는 자바스크립트로 동적 생성한다. -->
+        <!-- <div>1</div>
+        <div>00:00:65</div>
+        <div>2</div>
+        <div>00:01:21</div>
+        <div>3</div>
+        <div>00:03:95</div> -->
+      </div>
+    </div>
+    <script>
+    const $displayTime = document.querySelector('.display');
+    const $stopwatchEl = document.querySelector('.stopwatch');
+    const $laps = document.querySelector('.laps');
+    let timerId = null;
+    let startTime = null;
+    let elapsedTime = null;
+    let rank = 1;
+
+    const timeToString = time => {
+        let diffInHrs = time / 3600000;
+        let hh = Math.floor(diffInHrs);
+
+        let diffInMin = (diffInHrs - hh) * 60;
+        let mm = Math.floor(diffInMin);
+
+        let diffInSec = (diffInMin - mm) * 60;
+        let ss = Math.floor(diffInSec);
+
+        let diffInMilSec = (diffInSec - ss) * 1000;
+        let ms = Math.floor(diffInMilSec);
+
+        let formattedHH = hh.toString().padStart(2, "0");
+        let formattedMM = mm.toString().padStart(2, "0");
+        let formattedSS = ss.toString().padStart(2, "0");
+        let formattedMS = ms.toString().substring(0,2).padStart(2, "0");
+
+        return `${formattedMM}:${formattedSS}:${formattedMS}`;
+    } 
+
+    const removeAndAddBtn = (type,pos) => {
+        const $newBtn = document.createElement('button');
+        $newBtn.textContent = type;
+        $newBtn.classList.add('control');
+  
+        $stopwatchEl.removeChild($stopwatchEl.children[pos]);
+        $stopwatchEl.insertBefore($newBtn, $stopwatchEl.children[pos]);
+    }
+
+    const start = () => {
+        startTime = Date.now() - elapsedTime;
+        timerId = setInterval(() => {
+            elapsedTime = Date.now() - startTime;
+            $displayTime.textContent = timeToString(elapsedTime)
+        }, 100);
+
+    }
+    const stop = () => {
+        clearInterval(timerId);
+    }
+    const resetLaps = () => {
+        $laps.innerHTML = '';
+        const $frag = document.createDocumentFragment();
+        let rankEl = document.createElement('div');
+        rankEl.textContent = 'Laps';
+        rankEl.classList.add('lap-title');
+        let timeEl = document.createElement('div');
+        timeEl.classList.add('lap-title');
+        timeEl.textContent = 'Time';
+
+        $frag.appendChild(rankEl);
+        $frag.appendChild(timeEl);
+        
+        $laps.appendChild($frag);
+
+    }
+    const reset = () => {
+        resetLaps();
+        clearInterval(timerId);
+        $stopwatchEl.children[2].disabled = true;
+        elapsedTime = Date.now() - Date.now();
+        $displayTime.textContent = timeToString(elapsedTime);
+    }
+    const displayLap = () => {
+        
+
+        const $frag = document.createDocumentFragment();
+        let rankEl = document.createElement('div');
+        rankEl.textContent = rank++;
+        let timeEl = document.createElement('div');
+        timeEl.textContent = timeToString(elapsedTime);
+
+        $frag.appendChild(rankEl);
+        $frag.appendChild(timeEl);
+        
+        $laps.appendChild($frag);
+
+    }
+    const handler = e => {
+        if (e.target.textContent === 'Start') {
+            //change to stop button
+            removeAndAddBtn('Stop', 1);
+            removeAndAddBtn('Lap', 2);
+            
+            start();
+        }
+        if (e.target.textContent === 'Reset') {
+            reset();
+        }
+        if (e.target.textContent === 'Stop') {
+            removeAndAddBtn('Start', 1);
+            removeAndAddBtn('Reset', 2);
+
+            stop();
+        }
+        if (e.target.textContent === 'Lap') {
+            displayLap();
+        }
+
+    }
+
+    
+
+    
+    document.querySelector('.stopwatch').addEventListener('click', handler); 
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+          font-family: 'Open Sans';
+          font-weight: 300;
+        }
+        .title {
+          color: #db5b33;
+          font-weight: 300;
+          text-align: center;
+        }
+        .container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 300px;
+          margin: 20px auto;
+          font-size: 24px;
+        }
+        .increase,
+        .decrease {
+          width: 80px;
+          height: 40px;
+          font-size: 20px;
+          background-color: #efd81d;
+          border-color: #efd81d;
+          outline: none;
+          border-radius: 10px;
+          cursor: pointer;
+        }
+        .counter {
+          width: 50px;
+          text-align: center;
+        }
+      </style>
+    <title>Counter</title>
+</head>
+    <h1 class="title">Counter</h1>
+    <div class="container">
+    <button class="increase"><i class="bx bx-plus-circle"></i></button>
+    <div class="counter">0</div>
+    <button class="decrease"><i class="bx bx-minus-circle"></i></button>
+    </div>
+<body>
+    <script>
+        const counter = (function() {
+            let num = 0;
+
+            return {
+                getCurrentNum: function() {
+                  return num
+                },
+                increase: function() {
+                    num++;
+                },
+                decrease: function() {
+                    num--;
+                }
+            }
+        })();
+        const increase = () => {
+            counter.increase();
+            console.log(counter.getCurrentNum());
+            document.querySelector('.counter').innerHTML = counter.getCurrentNum();
+        }
+        const decrease = () => {
+            counter.decrease();
+            console.log(counter.getCurrentNum());
+            document.querySelector('.counter').innerHTML = counter.getCurrentNum();
+        }
+        document.querySelector('.increase').addEventListener('click', increase);
+        document.querySelector('.decrease').addEventListener('click', decrease);
+
+
+    </script>
+</body>
+</html>
