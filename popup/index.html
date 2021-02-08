@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Popup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400" rel="stylesheet" />
+    <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
+    <style>
+      *,
+      *::after,
+      *::before {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'Open Sans';
+        font-weight: 300;
+      }
+      .title {
+        color: #db5b33;
+        font-weight: 300;
+        text-align: center;
+      }
+
+      .popup-container {
+          width: 520px;
+          height: 300px;
+          top: 20%;
+          background-color: white;
+          border: 1px solid black;
+          margin: 0 auto;
+          position: relative;
+          border-radius: 5px;
+          box-shadow: 2px 2px 5px black;
+      }
+      .title {
+          font-size: 32px;
+          color: red;
+      }
+      .desc {
+          color: black;
+          padding: 0 40px;
+      }
+      .popup-input {
+          margin-left: 40px;
+      }
+      .close {
+        position: absolute;
+        top: 10px;
+        background: transparent;
+        border: 0;
+        right: 10px;
+      }
+      .container {
+          width: 100vw;
+          height: 100vh;
+          position: fixed;
+          top:0;
+          left:0;
+          z-index: 99;
+          display: none;
+          background: rgba(0,0,0,.3);
+      }
+      .active {
+        display: block;
+      }
+      /* 팝업을 위한 CSS */
+    </style>
+  </head>
+  <body>
+        <h1 class="title">Popup</h1>
+        <!-- 팝업을 위한 HTML -->
+        <button class="toggle-button">toggle popup</button>
+    
+        <div class="container">
+            <section class="popup-container">
+                <p class="title">Hello!</p>
+                <p class="desc">Lorem ipsum dolor sit amet consectetur, adipisicing elit. At accusamus, veritatis saepe natus corporis id fuga quam obcaecati necessitatibus modi illo unde quidem placeat doloribus! Soluta dignissimos voluptatem impedit nemo.</p>
+                <input type="text" class="popup-input">
+                <button class="ok">Ok</button>
+                <button class="cancel">Cancel</button>
+                <button class="close">X</button>
+            </section>
+        </div>
+        <p class="popup-message"></p>
+    <script>
+        document.addEventListener('DOMContentLoaded', ()=> {
+            const $popupEl = document.querySelector('.container');
+            const $togglBtn = document.querySelector('.toggle-button');
+            const $okBtn = document.querySelector('.ok');
+            const $inputEl = document.querySelector('.popup-input');
+            let isOpen = false;
+            let inputValue = null;
+
+            const render = () => {
+                if (isOpen) {
+                    $popupEl.classList.add('active');
+                    document.querySelector('body').style.overflow = 'hidden';
+                    document.querySelector('.popup-input').value = '';
+                } else {
+                    $popupEl.classList.remove('active');
+                    document.querySelector('body').style.overflow = 'auto';
+                }
+            }
+            const openPopup = () => {
+                isOpen = true;
+                render();
+            }
+
+            const showMessage = () => {
+                inputValue = $inputEl.value;
+                document.querySelector('.popup-message').textContent = inputValue;
+            }
+
+            const removePopup = () => {
+                isOpen = false;
+                render();
+            }
+
+            const popupHandler = e => {
+                if (e.target === $popupEl || e.target.matches('button')) {
+                    removePopup();
+                }
+                if (e.key === 'Enter') {
+                    showMessage();
+                    removePopup();
+                }
+            }
+
+            $togglBtn.addEventListener('click', openPopup);
+            $popupEl.addEventListener('click', popupHandler)
+            $popupEl.addEventListener('keydown', popupHandler)
+            $okBtn.addEventListener('click', showMessage);
+
+        })
+
+
+
+
+
+    </script>
+  </body>
+</html>

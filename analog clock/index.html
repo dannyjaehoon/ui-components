@@ -143,18 +143,26 @@
       <div class="time time12">|</div>
     </div>
     <script>
-        const $hours = document.querySelector('.hand.hour');
-        const $minute = document.querySelector('.hand.minute');
-        const $second = document.querySelector('.hand.second');
 
-        setInterval(()=> {
+
+        const renderTime = (() => {
+          const $hours = document.querySelector('.hand.hour');
+          const $minute = document.querySelector('.hand.minute');
+          const $second = document.querySelector('.hand.second');
+
+          return () => {
             const newDate = new Date();
-            $hours.style.setProperty('--deg', newDate.getHours());
-            $minute.style.setProperty('--deg', newDate.getMinutes());
-            $second.style.setProperty('--deg', newDate.getSeconds());
-            console.log($hours, $minute, $second);
-        }, 1000);
-        
+            $hours.style.setProperty('--deg', (newDate.getHours()*6) + (newDate.getMinutes()*0.5) + (newDate.getSeconds()*(0.5/60)));
+            $minute.style.setProperty('--deg', (newDate.getMinutes()*6) + (newDate.getSeconds()*0.1));
+            $second.style.setProperty('--deg', (newDate.getSeconds()*6));
+            // console.log($hours, $minute, $second);ß
+          }
+        })();
+
+        // 컴퓨터가 느리면 돔이 생성되기전에 setInterval이 실행될수도 있다. 그래서 돔 컨텐츠 
+        document.addEventListener('DOMContentLoaded', () => {
+          setInterval(renderTime, 1000);
+        })
     </script>
   </body>
 </html>

@@ -50,31 +50,24 @@
     <script>
         const counter = (function() {
             let num = 0;
-
+            const $counterDisplay = document.querySelector('.counter')
             return {
-                getCurrentNum: function() {
-                  return num
+              // 일반 함수를 사용하면 생성자 함수처럼 할수있다. 애로우 펑션은 super라던지 this등 못쓰는것들이 많다. 딱히 이유가 없으면 메소드 축약표현을 사용하자
+                increase() {
+                  num++;
+                  $counterDisplay.textContent = num;
                 },
-                increase: function() {
-                    num++;
-                },
-                decrease: function() {
-                    num--;
+                decrease() {
+                  if (num <= 0) return;
+                  num--;
+                  $counterDisplay.textContent = num;
                 }
             }
         })();
-        const increase = () => {
-            counter.increase();
-            console.log(counter.getCurrentNum());
-            document.querySelector('.counter').innerHTML = counter.getCurrentNum();
-        }
-        const decrease = () => {
-            counter.decrease();
-            console.log(counter.getCurrentNum());
-            document.querySelector('.counter').innerHTML = counter.getCurrentNum();
-        }
-        document.querySelector('.increase').addEventListener('click', increase);
-        document.querySelector('.decrease').addEventListener('click', decrease);
+
+      
+        document.querySelector('.increase').addEventListener('click', counter.increase);
+        document.querySelector('.decrease').addEventListener('click', counter.decrease);
 
 
     </script>

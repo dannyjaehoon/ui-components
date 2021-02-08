@@ -69,6 +69,8 @@
       </div>
     </div>
     <script>
+    //querySelectorAll은 nodelist를 반환하는데 유사배열객체이므로 디스트럭처링으로 처리할수잇다
+    const [$btnStartOrStop, $btnResetOrLaps] = document.querySelectorAll('.control');
     const $displayTime = document.querySelector('.display');
     const $stopwatchEl = document.querySelector('.stopwatch');
     const $laps = document.querySelector('.laps');
@@ -112,8 +114,7 @@
         timerId = setInterval(() => {
             elapsedTime = Date.now() - startTime;
             $displayTime.textContent = timeToString(elapsedTime)
-        }, 100);
-
+        }, 10);
     }
     const stop = () => {
         clearInterval(timerId);
@@ -132,7 +133,6 @@
         $frag.appendChild(timeEl);
         
         $laps.appendChild($frag);
-
     }
     const reset = () => {
         resetLaps();
@@ -142,8 +142,6 @@
         $displayTime.textContent = timeToString(elapsedTime);
     }
     const displayLap = () => {
-        
-
         const $frag = document.createDocumentFragment();
         let rankEl = document.createElement('div');
         rankEl.textContent = rank++;
